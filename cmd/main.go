@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/signal"
 
-	server "github.com/DarkSoul94/golang-template/cmd/httpserver"
-	"github.com/DarkSoul94/golang-template/config"
-	"github.com/DarkSoul94/golang-template/pkg/logger"
+	server "github.com/DarkSoul94/film-rest/cmd/httpserver"
+	"github.com/DarkSoul94/film-rest/config"
+	"github.com/DarkSoul94/film-rest/pkg/logger"
 )
 
 func main() {

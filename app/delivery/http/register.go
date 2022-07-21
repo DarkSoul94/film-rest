@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/DarkSoul94/golang-template/app"
+	"github.com/DarkSoul94/film-rest/app"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,7 +9,7 @@ import (
 func RegisterHTTPEndpoints(router *gin.Engine, uc app.Usecase) {
 	h := NewHandler(uc)
 
-	router.POST("/film")
-	router.GET("/film/:id")
-	router.GET("/film")
+	router.POST("/film", h.CreateFilm)
+	router.GET("/film/:id", h.GetFilm)
+	router.GET("/film", h.GetFilmsList)
 }

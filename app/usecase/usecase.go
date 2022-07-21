@@ -2,8 +2,11 @@ package usecase
 
 import (
 	"context"
+	"time"
 
-	"github.com/DarkSoul94/golang-template/app"
+	"github.com/DarkSoul94/film-rest/app"
+	"github.com/DarkSoul94/film-rest/models"
+	"github.com/google/uuid"
 )
 
 // Usecase ...
@@ -18,7 +21,9 @@ func NewUsecase(repo app.Repository) app.Usecase {
 	}
 }
 
-// HelloWorld ...
-func (u *usecase) HelloWorld(c context.Context) {
-	println("Hello")
+func (u *usecase) CreateFilm(ctx context.Context, film models.Film) error {
+	film.ID = uuid.New()
+	film.CreatedAt = time.Now()
+
+	return u.repo.AddFilm(film)
 }

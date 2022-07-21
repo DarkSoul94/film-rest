@@ -7,15 +7,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/DarkSoul94/golang-template/app"
-	apphttp "github.com/DarkSoul94/golang-template/app/delivery/http"
-	apprepo "github.com/DarkSoul94/golang-template/app/repo/mysql"
-	appusecase "github.com/DarkSoul94/golang-template/app/usecase"
-	"github.com/DarkSoul94/golang-template/config"
+	"github.com/DarkSoul94/film-rest/app"
+	apphttp "github.com/DarkSoul94/film-rest/app/delivery/http"
+	apprepo "github.com/DarkSoul94/film-rest/app/repo/json"
+	appusecase "github.com/DarkSoul94/film-rest/app/usecase"
+	"github.com/DarkSoul94/film-rest/config"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-
-	"github.com/DarkSoul94/dbconnectors/mysql"
 )
 
 // App ...
@@ -27,20 +25,7 @@ type App struct {
 
 // NewApp ...
 func NewApp(conf config.Config) *App {
-	db, err := mysql.InitMysqlDB(
-		conf.DBLogin,
-		conf.DBPass,
-		conf.DbHost,
-		conf.DbPort,
-		conf.DbName,
-		conf.DBArgs,
-		"file://migrations",
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	repo := apprepo.NewMySQLRepo(db)
+	repo := apprepo.NewJsonRepo(conf.DbPath)
 	uc := appusecase.NewUsecase(repo)
 	return &App{
 		appUC:   uc,
@@ -50,8 +35,6 @@ func NewApp(conf config.Config) *App {
 
 // Run run application
 func (a *App) Run(conf config.Config) {
-	defer a.appRepo.Close()
-
 	router := gin.New()
 	if viper.GetBool("app.release") {
 		gin.SetMode(gin.ReleaseMode)
@@ -82,6 +65,7 @@ func (a *App) Run(conf config.Config) {
 }
 
 func (a *App) Stop() error {
+
 	ctx, shutdown := context.WithTimeout(context.Background(), 5*time.Second)
 	defer shutdown()
 

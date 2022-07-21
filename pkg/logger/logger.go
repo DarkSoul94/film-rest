@@ -4,7 +4,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/DarkSoul94/golang-template/config"
+	"github.com/DarkSoul94/film-rest/config"
 	"github.com/sirupsen/logrus"
 )
 

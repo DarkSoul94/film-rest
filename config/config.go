@@ -10,12 +10,7 @@ type Config struct {
 	HTTPport string
 	LogDir   string
 	LogFile  string
-	DbHost   string
-	DbPort   string
-	DBLogin  string
-	DBPass   string
-	DbName   string
-	DBArgs   string
+	DbPath   string
 }
 
 // InitConfig - load config from config.yml
@@ -34,12 +29,7 @@ func InitConfig() Config {
 		HTTPport: viper.GetString("http_port"),
 		LogDir:   viper.GetString("log.dir"),
 		LogFile:  viper.GetString("log.file"),
-		DbHost:   viper.GetString("db.host"),
-		DbPort:   viper.GetString("db.port"),
-		DBLogin:  viper.GetString("db.login"),
-		DBPass:   viper.GetString("db.pass"),
-		DbName:   viper.GetString("db.name"),
-		DBArgs:   viper.GetString("db.args"),
+		DbPath:   viper.GetString("db.path"),
 	}
 
 	return conf

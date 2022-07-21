@@ -1,9 +1,12 @@
 package http
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 
-	"github.com/DarkSoul94/golang-template/app"
+	"github.com/DarkSoul94/film-rest/app"
+	"github.com/DarkSoul94/film-rest/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,8 +22,38 @@ func NewHandler(uc app.Usecase) *Handler {
 	}
 }
 
-// HelloWorld ...
-func (h *Handler) HelloWorld(c *gin.Context) {
-	h.uc.HelloWorld(c.Request.Context())
-	c.JSON(http.StatusOK, map[string]string{"status": "ok"})
+func (h *Handler) CreateFilm(c *gin.Context) {
+	var (
+		film  newFilm
+		mFilm models.Film
+		err   error
+	)
+
+	err = c.BindJSON(&film)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "bodyInvalid"})
+		return
+	}
+
+	mFilm, err = h.toModelFilm(film)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "bodyInvalid"})
+		return
+	}
+
+	err = h.uc.CreateFilm(context.Background(), mFilm)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{"status": "success"})
+}
+
+func (h *Handler) GetFilm(c *gin.Context) {
+
+}
+
+func (h *Handler) GetFilmsList(c *gin.Context) {
+
 }
