@@ -59,8 +59,7 @@ func (a *App) Run(conf config.Config) {
 		router.Use(gin.Logger())
 	}
 
-	apiRouter := router.Group("/api")
-	apphttp.RegisterHTTPEndpoints(apiRouter, a.appUC)
+	apphttp.RegisterHTTPEndpoints(router, a.appUC)
 
 	a.httpServer = &http.Server{
 		Addr:           ":" + conf.HTTPport,

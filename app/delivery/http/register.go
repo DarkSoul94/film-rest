@@ -6,11 +6,10 @@ import (
 )
 
 // RegisterHTTPEndpoints ...
-func RegisterHTTPEndpoints(router *gin.RouterGroup, uc app.Usecase) {
+func RegisterHTTPEndpoints(router *gin.Engine, uc app.Usecase) {
 	h := NewHandler(uc)
 
-	apiEndpoints := router.Group("/api")
-	{
-		apiEndpoints.POST("/", h.HelloWorld)
-	}
+	router.POST("/film")
+	router.GET("/film/:id")
+	router.GET("/film")
 }
