@@ -1,0 +1,9 @@
+app:
+  release: false
+  name: 'film rest'
+  http_port: 28000
+  log:
+    dir: 'logs'
+    file: 'app.log'
+  db:
+    path: './data.json'
