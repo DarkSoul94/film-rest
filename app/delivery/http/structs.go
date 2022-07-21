@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"github.com/DarkSoul94/film-rest/models"
+	"github.com/google/uuid"
 )
 
 type newFilm struct {
 	Title       string `json:"title"`
-	ReleaseDate string `json:"release_date"`
+	ReleaseDate string `json:"releaseDate"`
 }
 
 func (h *Handler) toModelFilm(film newFilm) (models.Film, error) {
@@ -26,4 +27,18 @@ func (h *Handler) toModelFilm(film newFilm) (models.Film, error) {
 		Title:       film.Title,
 		ReleaseDate: release,
 	}, nil
+}
+
+type outFilm struct {
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	ReleaseDate time.Time `json:"releaseDate"`
+}
+
+func (h *Handler) toOutFilm(film models.Film) outFilm {
+	return outFilm{
+		ID:          film.ID,
+		Title:       film.Title,
+		ReleaseDate: film.ReleaseDate,
+	}
 }

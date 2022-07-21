@@ -2,11 +2,14 @@ package json
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"github.com/DarkSoul94/film-rest/app"
 	"github.com/DarkSoul94/film-rest/models"
+	"github.com/google/uuid"
 )
 
 type repoJson struct {
@@ -76,6 +79,10 @@ func (r *repoJson) AddFilm(film models.Film) error {
 	if err != nil {
 		return err
 	}
+
+	film.ID = uuid.New()
+	film.CreatedAt = time.Now()
+
 	films.Films = append(films.Films, film)
 
 	data, err := json.Marshal(films)
@@ -89,4 +96,19 @@ func (r *repoJson) AddFilm(film models.Film) error {
 	}
 
 	return nil
+}
+
+func (r *repoJson) GetFilmById(id uuid.UUID) (models.Film, error) {
+	films, err := r.GetAllFilms()
+	if err != nil {
+		return models.Film{}, err
+	}
+
+	for _, film := range films {
+		if film.ID == id {
+			return film, nil
+		}
+	}
+
+	return models.Film{}, errors.New("not found")
 }

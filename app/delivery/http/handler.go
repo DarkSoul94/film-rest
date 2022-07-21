@@ -1,11 +1,13 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/DarkSoul94/film-rest/app"
 	"github.com/DarkSoul94/film-rest/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // Handler ...
@@ -49,7 +51,24 @@ func (h *Handler) CreateFilm(c *gin.Context) {
 }
 
 func (h *Handler) GetFilm(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("id"))
+	fmt.Println(err)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
+		return
+	}
 
+	film, err := h.uc.GetFilm(id)
+	if err != nil {
+		if err.Error() == "not found" {
+			c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "empty"})
+			return
+		}
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{"status": "success", "id": film.ID, "title": film.Title, "releaseDate": film.ReleaseDate})
 }
 
 func (h *Handler) GetFilmsList(c *gin.Context) {
@@ -64,5 +83,11 @@ func (h *Handler) GetFilmsList(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{"status": "success", "data": films})
+	var outFilms []outFilm = make([]outFilm, 0)
+
+	for _, film := range films {
+		outFilms = append(outFilms, h.toOutFilm(film))
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{"status": "success", "data": outFilms})
 }
