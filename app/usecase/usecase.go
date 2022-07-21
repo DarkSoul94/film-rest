@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"context"
 	"time"
 
 	"github.com/DarkSoul94/film-rest/app"
@@ -21,9 +20,13 @@ func NewUsecase(repo app.Repository) app.Usecase {
 	}
 }
 
-func (u *usecase) CreateFilm(ctx context.Context, film models.Film) error {
+func (u *usecase) CreateFilm(film models.Film) error {
 	film.ID = uuid.New()
 	film.CreatedAt = time.Now()
 
 	return u.repo.AddFilm(film)
+}
+
+func (u *usecase) GetAllFilms() ([]models.Film, error) {
+	return u.repo.GetAllFilms()
 }

@@ -1,8 +1,6 @@
 package http
 
 import (
-	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/DarkSoul94/film-rest/app"
@@ -41,9 +39,9 @@ func (h *Handler) CreateFilm(c *gin.Context) {
 		return
 	}
 
-	err = h.uc.CreateFilm(context.Background(), mFilm)
+	err = h.uc.CreateFilm(mFilm)
 	if err != nil {
-		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
 		return
 	}
 
@@ -55,5 +53,16 @@ func (h *Handler) GetFilm(c *gin.Context) {
 }
 
 func (h *Handler) GetFilmsList(c *gin.Context) {
+	films, err := h.uc.GetAllFilms()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
+		return
+	}
 
+	if len(films) == 0 {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "empty"})
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{"status": "success", "data": films})
 }

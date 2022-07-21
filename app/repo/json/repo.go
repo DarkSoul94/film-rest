@@ -41,7 +41,7 @@ type Films struct {
 func (r *repoJson) GetAllFilms() ([]models.Film, error) {
 	var films Films
 
-	file, err := os.OpenFile(r.Path, os.O_CREATE|os.O_RDONLY, 0755)
+	file, err := os.OpenFile(r.Path, os.O_RDONLY, 0755)
 	defer file.Close()
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (r *repoJson) AddFilm(film models.Film) error {
 		err   error
 	)
 
-	file, err := os.OpenFile(r.Path, os.O_CREATE|os.O_RDONLY, 0755)
+	file, err := os.OpenFile(r.Path, os.O_WRONLY, 0755)
 	defer file.Close()
 	if err != nil {
 		return err

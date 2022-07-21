@@ -5,4 +5,4 @@ log:
   dir: 'logs'
   file: 'app.log'
 db:
-  path: './data.json'
+  path: './films.json'
