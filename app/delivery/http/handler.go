@@ -72,7 +72,7 @@ func (h *Handler) GetFilm(c *gin.Context) {
 }
 
 func (h *Handler) GetFilmsList(c *gin.Context) {
-	films, err := h.uc.GetAllFilms()
+	films, err := h.uc.GetAllFilms(c.Query("sort"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
 		return

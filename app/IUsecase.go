@@ -7,7 +7,7 @@ import (
 
 // Usecase ...
 type Usecase interface {
-	GetAllFilms() ([]models.Film, error)
+	GetAllFilms(sortType string) ([]models.Film, error)
 	CreateFilm(film models.Film) error
 	GetFilm(id uuid.UUID) (models.Film, error)
 }
