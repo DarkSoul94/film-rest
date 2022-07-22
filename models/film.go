@@ -7,8 +7,8 @@ import (
 )
 
 type Film struct {
-	ID          uuid.UUID
-	Title       string
-	ReleaseDate time.Time
-	CreatedAt   time.Time
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	ReleaseDate time.Time `json:"release_date"`
+	CreatedAt   time.Time `json:"created_at"`
 }
