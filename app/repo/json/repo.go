@@ -17,7 +17,7 @@ type repoJson struct {
 }
 
 func NewJsonRepo(path string) app.Repository {
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDONLY, 0755)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0755)
 	defer file.Close()
 	if err != nil {
 		panic(err)
@@ -85,7 +85,7 @@ func (r *repoJson) AddFilm(film models.Film) error {
 
 	films.Films = append(films.Films, film)
 
-	data, err := json.Marshal(films)
+	data, err := json.MarshalIndent(films, "", " ")
 	if err != nil {
 		return err
 	}
