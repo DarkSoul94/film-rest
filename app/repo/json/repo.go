@@ -9,6 +9,7 @@ import (
 
 	"github.com/DarkSoul94/film-rest/app"
 	"github.com/DarkSoul94/film-rest/models"
+	"github.com/DarkSoul94/film-rest/pkg/logger"
 	"github.com/google/uuid"
 )
 
@@ -17,9 +18,10 @@ type repoJson struct {
 }
 
 func NewJsonRepo(path string) app.Repository {
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 0755)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0755)
 	defer file.Close()
 	if err != nil {
+		logger.LogError("failed open file", "json/repo", path, err)
 		panic(err)
 	}
 
@@ -47,16 +49,19 @@ func (r *repoJson) GetAllFilms() ([]models.Film, error) {
 	file, err := os.OpenFile(r.Path, os.O_RDONLY, 0755)
 	defer file.Close()
 	if err != nil {
+		logger.LogError("failed open file", "json/repo", r.Path, err)
 		return nil, err
 	}
 
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
+		logger.LogError("failed read data from file", "json/repo", r.Path, err)
 		return nil, err
 	}
 
 	err = json.Unmarshal(data, &films)
 	if err != nil {
+		logger.LogError("failed parce data", "json/repo", string(data), err)
 		return nil, err
 	}
 
@@ -69,14 +74,16 @@ func (r *repoJson) AddFilm(film models.Film) error {
 		err   error
 	)
 
-	file, err := os.OpenFile(r.Path, os.O_WRONLY, 0755)
-	defer file.Close()
+	films.Films, err = r.GetAllFilms()
 	if err != nil {
+		logger.LogError("failed get films list", "json/repo", "", err)
 		return err
 	}
 
-	films.Films, err = r.GetAllFilms()
+	file, err := os.OpenFile(r.Path, os.O_WRONLY, 0755)
+	defer file.Close()
 	if err != nil {
+		logger.LogError("failed open file", "json/repo", r.Path, err)
 		return err
 	}
 
@@ -87,6 +94,7 @@ func (r *repoJson) AddFilm(film models.Film) error {
 
 	data, err := json.MarshalIndent(films, "", " ")
 	if err != nil {
+		logger.LogError("failed marshal struct", "json/repo", "", err)
 		return err
 	}
 
@@ -101,6 +109,7 @@ func (r *repoJson) AddFilm(film models.Film) error {
 func (r *repoJson) GetFilmById(id uuid.UUID) (models.Film, error) {
 	films, err := r.GetAllFilms()
 	if err != nil {
+		logger.LogError("failed get films list", "json/repo", "", err)
 		return models.Film{}, err
 	}
 

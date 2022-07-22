@@ -6,6 +6,7 @@ import (
 
 	"github.com/DarkSoul94/film-rest/app"
 	"github.com/DarkSoul94/film-rest/models"
+	"github.com/DarkSoul94/film-rest/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -32,18 +33,21 @@ func (h *Handler) CreateFilm(c *gin.Context) {
 	err = c.BindJSON(&film)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "bodyInvalid"})
+		logger.LogError("failed parce new film data", "json/repo", "", err)
 		return
 	}
 
 	mFilm, err = h.toModelFilm(film)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "bodyInvalid"})
+		logger.LogError("invalid new film data", "json/repo", "", err)
 		return
 	}
 
 	err = h.uc.CreateFilm(mFilm)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
+		logger.LogError("failed create new film", "json/repo", "", err)
 		return
 	}
 
@@ -55,6 +59,7 @@ func (h *Handler) GetFilm(c *gin.Context) {
 	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
+		logger.LogError("failed parce film id", "json/repo", "", err)
 		return
 	}
 
@@ -65,6 +70,7 @@ func (h *Handler) GetFilm(c *gin.Context) {
 			return
 		}
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
+		logger.LogError("failed get film", "json/repo", id.String(), err)
 		return
 	}
 
@@ -75,6 +81,7 @@ func (h *Handler) GetFilmsList(c *gin.Context) {
 	films, err := h.uc.GetAllFilms(c.Query("sort"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, map[string]interface{}{"status": "error"})
+		logger.LogError("failed get films list", "json/repo", "", err)
 		return
 	}
 
